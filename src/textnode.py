@@ -13,30 +13,6 @@ class TextNode:
         self.text_type = text_type
         self.url = url
 
-    def text_node_to_html_node(text_node):
-        leafnode = LeafNode(None, None)
-        if text_node.text_type == text_type_image:
-            leafnode.tag = "img"
-            leafnode.value = ""
-            leafnode.props = { "src": f"{text_node.url}", "alt": f"{text_node.text}" }
-        elif text_node.text_type == text_type_text:
-            leafnode.tag = None
-        elif text_node.text_type == text_type_bold:
-            leafnode.tag = "b"
-        elif text_node.text_type == text_type_italic:
-            leafnode.tag = "i"
-        elif text_node.text_type == text_type_code:
-            leafnode.tag = "code"
-        elif text_node.text_type == text_type_link:
-            leafnode.tag = "a"
-            leafnode.props = { "href": f"{text_node.url}" }
-        else:
-            raise Exception("type not supported") 
-        
-        leafnode.value = text_node.text
-
-        return leafnode
-
     def __eq__(self, other):
         return (
             self.text_type == other.text_type
@@ -46,4 +22,19 @@ class TextNode:
 
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
+
+def text_node_to_html_node(text_node):
+    if text_node.text_type == text_type_image:
+        return LeafNode("img", "", { "src": f"{text_node.url}", "alt": f"{text_node.text}" })
+    if text_node.text_type == text_type_text:
+        return LeafNode(None, text_node.text)
+    if text_node.text_type == text_type_bold:
+        return LeafNode("b", text_node.text)
+    if text_node.text_type == text_type_italic:
+        return LeafNode("i", text_node.text)
+    if text_node.text_type == text_type_code:
+        return LeafNode("code", text_node.text)
+    if text_node.text_type == text_type_link:
+        return LeafNode("a", text_node.text, { "href": f"{text_node.url}" })
+    raise Exception("type not supported") 
     
